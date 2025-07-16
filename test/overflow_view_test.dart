@@ -4,7 +4,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:overflow_view/overflow_view.dart';
 
 void main() {
-
   testWidgets(
     'the overflow indicator is not built if there is enough room (except for flexible)',
     (tester) async {
@@ -378,10 +377,7 @@ void main() {
 }
 
 class _Text extends StatelessWidget {
-  const _Text(
-    this.text, {
-    Key? key,
-  }) : super(key: key);
+  const _Text(this.text);
 
   final String text;
 

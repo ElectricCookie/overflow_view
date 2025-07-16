@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:overflow_view/overflow_view.dart';
 
@@ -21,15 +19,16 @@ List<Avatar> generateAvatars(int count) {
   return List.generate(count + 1, (index) => Avatar(getInitials(index), getColor(index)));
 }
 
-class Avatars extends StatefulWidget {
-  const Avatars({super.key});
+class AvatarsDemo extends StatefulWidget {
+  const AvatarsDemo({super.key});
 
   @override
-  State<Avatars> createState() => _AvatarsState();
+  State<AvatarsDemo> createState() => _AvatarsDemoState();
 }
 
-class _AvatarsState extends State<Avatars> {
+class _AvatarsDemoState extends State<AvatarsDemo> {
   int _avatarCount = 5;
+  double _spacing = -40;
 
   @override
   Widget build(BuildContext context) {
@@ -38,23 +37,46 @@ class _AvatarsState extends State<Avatars> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        OverflowView.flexible(
-          spacing: -40,
-          children: <Widget>[
-            for (int i = 0; i < avatars.length; i++) AvatarWidget(text: avatars[i].initials, color: avatars[i].color)
-          ],
-          builder: (context, remaining) {
-            return AvatarWidget(
-              text: '+$remaining',
-              color: Colors.red,
-            );
-          },
+        SizedBox(
+          width: double.infinity,
+          child: Card(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: OverflowView.flexible(
+                spacing: _spacing,
+                children: <Widget>[
+                  for (int i = 0; i < avatars.length; i++)
+                    AvatarWidget(text: avatars[i].initials, color: avatars[i].color)
+                ],
+                builder: (context, remaining) {
+                  return AvatarWidget(
+                    text: '+$remaining',
+                    color: Colors.red,
+                  );
+                },
+              ),
+            ),
+          ),
         ),
         Slider(
           value: _avatarCount.toDouble(),
           min: 1,
           max: 50,
           onChanged: (value) => setState(() => _avatarCount = value.toInt()),
+        ),
+        SizedBox(height: 20),
+        Text('Spacing (${_spacing.toInt()})'),
+        SizedBox(height: 10),
+        SizedBox(
+          width: 200,
+          child: Slider(
+            value: _spacing,
+            min: -40,
+            max: 40,
+            onChanged: (value) => setState(
+              () => _spacing = value,
+            ),
+          ),
         ),
       ],
     );
@@ -63,10 +85,10 @@ class _AvatarsState extends State<Avatars> {
 
 class AvatarWidget extends StatelessWidget {
   const AvatarWidget({
-    Key? key,
+    super.key,
     required this.text,
     required this.color,
-  }) : super(key: key);
+  });
 
   final String text;
   final Color color;

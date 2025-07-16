@@ -68,7 +68,7 @@ class OverflowView extends MultiChildRenderObjectWidget {
         );
 
   OverflowView._all({
-    Key? key,
+    super.key,
     required OverflowIndicatorBuilder builder,
     this.mainAxisAlignment = MainAxisAlignment.start,
     this.crossAxisAlignment = CrossAxisAlignment.center,
@@ -80,7 +80,6 @@ class OverflowView extends MultiChildRenderObjectWidget {
   })  : assert(spacing > double.negativeInfinity && spacing < double.infinity),
         _layoutBehavior = layoutBehavior,
         super(
-          key: key,
           children: [
             ...children,
             ValueLayoutBuilder<int>(
@@ -118,6 +117,7 @@ class OverflowView extends MultiChildRenderObjectWidget {
   final bool expandFirstChild;
 
   @override
+  // ignore: library_private_types_in_public_api
   _OverflowViewElement createElement() {
     return _OverflowViewElement(this);
   }
@@ -150,14 +150,14 @@ class OverflowView extends MultiChildRenderObjectWidget {
 }
 
 class _OverflowViewElement extends MultiChildRenderObjectElement {
-  _OverflowViewElement(OverflowView widget) : super(widget);
+  _OverflowViewElement(OverflowView super.widget);
 
   @override
   void debugVisitOnstageChildren(ElementVisitor visitor) {
-    children.forEach((element) {
+    for (var element in children) {
       if (element.renderObject?.isOnstage == true) {
         visitor(element);
       }
-    });
+    }
   }
 }
