@@ -65,12 +65,11 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
+        child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              /*Text(
                 'People',
                 style: TextStyle(fontSize: 20),
               ),
@@ -90,14 +89,23 @@ class _MyHomePageState extends State<MyHomePage> {
                     color: Colors.red,
                   );
                 },
+              ),*/
+
+              Text('MainAxisAlignment.start'),
+              FractionallySizedBox(
+                widthFactor: ratio,
+                child: CommandBar(mainAxisAlignment: MainAxisAlignment.start),
               ),
+              Text('MainAxisAlignment.end'),
               SizedBox(height: 20),
               FractionallySizedBox(
                 widthFactor: ratio,
-                child: CommandBar(),
+                child: CommandBar(mainAxisAlignment: MainAxisAlignment.end),
               ),
+              Text('MainAxisAlignment.center'),
+              CommandBar(mainAxisAlignment: MainAxisAlignment.center),
               SizedBox(height: 20),
-              Expanded(
+              /*Expanded(
                 child: OverflowView(
                   direction: Axis.vertical,
                   spacing: 4,
@@ -159,7 +167,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     );
                   },
                 ),
-              ),
+              ),*/
               // Slider(
               //   value: ratio,
               //   min: 0,
@@ -254,8 +262,11 @@ class AvatarWidget extends StatelessWidget {
 }
 
 class CommandBar extends StatelessWidget {
+  final MainAxisAlignment mainAxisAlignment;
+
   const CommandBar({
     Key? key,
+    this.mainAxisAlignment = MainAxisAlignment.start,
   }) : super(key: key);
 
   @override
@@ -273,8 +284,14 @@ class CommandBar extends StatelessWidget {
     ];
 
     return OverflowView.flexible(
-      spacing: -4,
-      children: [...commands.map((e) => _MenuItem(data: e))],
+      spacing: 4,
+      expandFirstChild: true,
+      mainAxisAlignment: mainAxisAlignment,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: 200, child: Text('Hello this is a long text for testing the ')),
+        ...commands.map((e) => _MenuItem(data: e))
+      ],
       builder: (context, remaining) {
         return PopupMenuButton<String>(
           icon: Icon(Icons.menu),
