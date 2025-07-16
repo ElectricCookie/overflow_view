@@ -297,15 +297,16 @@ class RenderOverflowView extends RenderBox
       final OverflowViewParentData overflowIndicatorParentData = overflowIndicator.parentData as OverflowViewParentData;
       overflowIndicatorParentData.offstage = false;
 
-      double indicatorSize = _getMainSize(overflowIndicator) + spacing;
+      double indicatorSize = _getMainSize(overflowIndicator);
 
-      filledExtent += indicatorSize + spacing;
+      filledExtent += spacing + indicatorSize;
 
       while (filledExtent >= availableExtent) {
-        print("Removing child $fittingChildren of ${renderedChildren.length}");
         final RenderBox lastChild = renderedChildren.last;
+
         final OverflowViewParentData lastChildParentData = lastChild.parentData as OverflowViewParentData;
         lastChildParentData.offstage = true;
+
         renderedChildren.removeLast();
         fittingChildren--;
         final freed = _getMainSize(lastChild) + spacing;
@@ -320,9 +321,10 @@ class RenderOverflowView extends RenderBox
     // Now we now the extent of all children that will be painted.
     // We can now calculate the offsets and the remaining space.
 
-    double remainder = availableExtent - filledExtent;
+    // Trim the last spacing..
+    filledExtent -= spacing;
 
-    print("Filled extent: $filledExtent of $availableExtent . Remaining $remainder");
+    double remainder = availableExtent - filledExtent;
 
     if (expandFirstChild) {
       double childMainSize = _getMainSize(children.first);
