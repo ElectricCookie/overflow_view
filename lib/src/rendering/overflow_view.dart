@@ -246,6 +246,13 @@ class RenderOverflowView extends RenderBox
     return children;
   }
 
+  double _spacingExtent(int childCount) {
+    if (childCount == 0) {
+      return 0;
+    }
+    return spacing * (childCount - 1);
+  }
+
   void _performFlexibleLayout() {
     double availableExtent = _isHorizontal ? constraints.maxWidth : constraints.maxHeight;
 
@@ -267,9 +274,9 @@ class RenderOverflowView extends RenderBox
 
       maxCrossSize = math.max(maxCrossSize, childCrossSize);
 
-      if (filledExtent + childMainSize <= availableExtent) {
+      if (filledExtent + childMainSize + _spacingExtent(fittingChildren) <= availableExtent) {
         childParentData.offstage = false;
-        filledExtent += childMainSize + spacing;
+        filledExtent += childMainSize;
         fittingChildren++;
       } else {
         showOverflowIndicator = true;
@@ -298,10 +305,9 @@ class RenderOverflowView extends RenderBox
       overflowIndicatorParentData.offstage = false;
 
       double indicatorSize = _getMainSize(overflowIndicator);
+      filledExtent += indicatorSize;
 
-      filledExtent += spacing + indicatorSize;
-
-      while (filledExtent >= availableExtent) {
+      while (filledExtent + _spacingExtent(fittingChildren + 1) >= availableExtent) {
         final RenderBox lastChild = renderedChildren.last;
 
         final OverflowViewParentData lastChildParentData = lastChild.parentData as OverflowViewParentData;
@@ -309,7 +315,8 @@ class RenderOverflowView extends RenderBox
 
         renderedChildren.removeLast();
         fittingChildren--;
-        final freed = _getMainSize(lastChild) + spacing;
+        final freed = _getMainSize(lastChild);
+
         filledExtent -= freed;
       }
 
@@ -318,13 +325,7 @@ class RenderOverflowView extends RenderBox
       maxCrossSize = math.max(maxCrossSize, _getCrossSize(overflowIndicator));
     }
 
-    // Now we now the extent of all children that will be painted.
-    // We can now calculate the offsets and the remaining space.
-
-    // Trim the last spacing..
-    filledExtent -= spacing;
-
-    double remainder = availableExtent - filledExtent;
+    double remainder = availableExtent - filledExtent - _spacingExtent(renderedChildren.length);
 
     if (expandFirstChild) {
       double childMainSize = _getMainSize(children.first);
@@ -369,6 +370,7 @@ class RenderOverflowView extends RenderBox
       } else {
         childParentData.offset = Offset(childCrossOffset, offset);
       }
+
       offset += _getMainSize(child) + spacing;
     }
 
