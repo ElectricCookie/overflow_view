@@ -278,6 +278,8 @@ class RenderOverflowView extends RenderBox
       }
     }
 
+    final renderedChildren = children.where((child) => child.isOnstage).toList();
+
     if (showOverflowIndicator) {
       // We need to place the overflow indicator. To do this we
       // might need to remove children until it fits.
@@ -297,19 +299,20 @@ class RenderOverflowView extends RenderBox
 
       double indicatorSize = _getMainSize(overflowIndicator) + spacing;
 
-      filledExtent += indicatorSize;
+      filledExtent += indicatorSize + spacing;
 
       while (filledExtent >= availableExtent) {
-        final RenderBox lastChild = children.last;
+        print("Removing child $fittingChildren of ${renderedChildren.length}");
+        final RenderBox lastChild = renderedChildren.last;
         final OverflowViewParentData lastChildParentData = lastChild.parentData as OverflowViewParentData;
         lastChildParentData.offstage = true;
-        children.removeLast();
+        renderedChildren.removeLast();
         fittingChildren--;
-        final freed = _getMainSize(lastChild);
+        final freed = _getMainSize(lastChild) + spacing;
         filledExtent -= freed;
       }
 
-      children.add(overflowIndicator);
+      renderedChildren.add(overflowIndicator);
 
       maxCrossSize = math.max(maxCrossSize, _getCrossSize(overflowIndicator));
     }
@@ -318,6 +321,8 @@ class RenderOverflowView extends RenderBox
     // We can now calculate the offsets and the remaining space.
 
     double remainder = availableExtent - filledExtent;
+
+    print("Filled extent: $filledExtent of $availableExtent . Remaining $remainder");
 
     if (expandFirstChild) {
       double childMainSize = _getMainSize(children.first);
@@ -342,7 +347,7 @@ class RenderOverflowView extends RenderBox
       offset = remainder;
     }
 
-    for (final child in children.where((child) => child.isOnstage)) {
+    for (final child in renderedChildren) {
       final childParentData = child.parentData as OverflowViewParentData;
 
       final double childCrossSize = _getCrossSize(child);

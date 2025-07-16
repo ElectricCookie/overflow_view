@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:example/avatars.dart';
 import 'package:flutter/material.dart';
 import 'package:overflow_view/overflow_view.dart';
 
@@ -9,12 +12,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Overflow View Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(title: 'Overflow View Demo'),
     );
   }
 }
@@ -28,245 +31,117 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class Avatar {
-  const Avatar(this.initials, this.color);
-  final String initials;
-  final Color color;
-}
-
-const List<Avatar> avatars = <Avatar>[
-  Avatar('AD', Colors.green),
-  Avatar('JG', Colors.pink),
-  Avatar('DA', Colors.blue),
-  Avatar('JA', Colors.black),
-  Avatar('CB', Colors.amber),
-  Avatar('RR', Colors.deepPurple),
-  Avatar('JD', Colors.pink),
-  Avatar('MB', Colors.amberAccent),
-  Avatar('AA', Colors.blueAccent),
-  Avatar('BA', Colors.tealAccent),
-  Avatar('CR', Colors.yellow),
-];
-
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 1;
-  double ratio = 1;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter = (_counter + 1).clamp(0, avatars.length - 1);
-    });
-  }
+  MainAxisAlignment _mainAxisAlignment = MainAxisAlignment.start;
+  CrossAxisAlignment _crossAxisAlignment = CrossAxisAlignment.start;
+  bool _expandFirstChild = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              /*Text(
-                'People',
-                style: TextStyle(fontSize: 20),
-              ),
-              SizedBox(height: 20),
-              OverflowView.flexible(
-                spacing: -40,
-                children: <Widget>[
-                  for (int i = 0; i < _counter; i++)
-                    AvatarWidget(
-                      text: avatars[i].initials,
-                      color: avatars[i].color,
-                    )
-                ],
-                builder: (context, remaining) {
-                  return AvatarWidget(
-                    text: '+$remaining',
-                    color: Colors.red,
-                  );
-                },
-              ),*/
-
-              Text('MainAxisAlignment.start'),
-              FractionallySizedBox(
-                widthFactor: ratio,
-                child: CommandBar(mainAxisAlignment: MainAxisAlignment.start),
-              ),
-              Text('MainAxisAlignment.end'),
-              SizedBox(height: 20),
-              FractionallySizedBox(
-                widthFactor: ratio,
-                child: CommandBar(mainAxisAlignment: MainAxisAlignment.end),
-              ),
-              Text('MainAxisAlignment.center'),
-              CommandBar(mainAxisAlignment: MainAxisAlignment.center),
-              SizedBox(height: 20),
-              /*Expanded(
-                child: OverflowView(
-                  direction: Axis.vertical,
-                  spacing: 4,
-                  children: <Widget>[
-                    for (int i = 0; i < _counter; i++)
-                      AvatarWidget(
-                        text: avatars[i].initials,
-                        color: avatars[i].color,
-                      )
-                  ],
-                  builder: (context, remaining) {
-                    return SizedBox(
-                      height: 80,
-                      width: 80,
-                      child: Stack(
-                        fit: StackFit.expand,
-                        children: [
-                          if (remaining > 0)
-                            AvatarOverview(
-                              position: 0,
-                              remaining: remaining,
-                              counter: _counter,
-                            ),
-                          if (remaining > 1)
-                            AvatarOverview(
-                              position: 1,
-                              remaining: remaining,
-                              counter: _counter,
-                            ),
-                          if (remaining > 2)
-                            AvatarOverview(
-                              position: 2,
-                              remaining: remaining,
-                              counter: _counter,
-                            ),
-                          if (remaining > 3)
-                            AvatarOverview(
-                              position: 3,
-                              remaining: remaining,
-                              counter: _counter,
-                            ),
-                          Positioned.fill(
-                            child: Center(
-                              child: FractionallySizedBox(
-                                alignment: Alignment.center,
-                                widthFactor: 0.5,
-                                heightFactor: 0.5,
-                                child: FittedBox(
-                                  child: AvatarWidget(
-                                    text: '+$remaining',
-                                    color: Colors.black.withOpacity(0.9),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
+        appBar: AppBar(
+          title: Text(widget.title),
+        ),
+        body: SafeArea(
+          child: SingleChildScrollView(
+            padding: EdgeInsets.all(0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Avatars',
+                  style: TextStyle(fontSize: 20),
                 ),
-              ),*/
-              // Slider(
-              //   value: ratio,
-              //   min: 0,
-              //   max: 1,
-              //   divisions: 100,
-              //   onChanged: (value) {
-              //     setState(() {
-              //       ratio = value;
-              //     });
-              //   },
-              // ),
-              SizedBox(height: 40),
-            ],
+                SizedBox(height: 20),
+                Avatars(),
+                Divider(),
+                Text('Command Bar', style: TextStyle(fontSize: 20)),
+                Wrap(
+                  spacing: 10,
+                  runSpacing: 10,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('MainAxisAlignment'),
+                        SizedBox(height: 10),
+                        SegmentedButton<MainAxisAlignment>(
+                          segments: [
+                            ButtonSegment(value: MainAxisAlignment.start, label: Text('Start')),
+                            ButtonSegment(value: MainAxisAlignment.center, label: Text('Center')),
+                            ButtonSegment(value: MainAxisAlignment.end, label: Text('End')),
+                          ],
+                          selected: {_mainAxisAlignment},
+                          onSelectionChanged: (value) {
+                            setState(() {
+                              _mainAxisAlignment = value.first;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('CrossAxisAlignment'),
+                        SizedBox(height: 10),
+                        SegmentedButton<CrossAxisAlignment>(
+                          segments: [
+                            ButtonSegment(value: CrossAxisAlignment.start, label: Text('Start')),
+                            ButtonSegment(value: CrossAxisAlignment.center, label: Text('Center')),
+                            ButtonSegment(value: CrossAxisAlignment.end, label: Text('End')),
+                          ],
+                          selected: {_crossAxisAlignment},
+                          onSelectionChanged: (value) {
+                            setState(() {
+                              _crossAxisAlignment = value.first;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Switch(
+                          value: _expandFirstChild,
+                          onChanged: (value) {
+                            setState(() {
+                              _expandFirstChild = value;
+                            });
+                          },
+                        ),
+                        Text('Expand first child'),
+                      ],
+                    ),
+                  ],
+                ),
+                Container(
+                  width: double.infinity,
+                  child: Card(
+                    child: CommandBar(
+                      mainAxisAlignment: _mainAxisAlignment,
+                      crossAxisAlignment: _crossAxisAlignment,
+                      expandFirstChild: _expandFirstChild,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ),
-    );
-  }
-}
-
-class AvatarOverview extends StatelessWidget {
-  AvatarOverview({
-    Key? key,
-    required int remaining,
-    required int position,
-    required int counter,
-  })  : index = counter - remaining + position,
-        alignment = _getAlignment(position),
-        super(key: key);
-
-  final int index;
-  final Alignment alignment;
-
-  @override
-  Widget build(BuildContext context) {
-    final Avatar avatar = avatars[index];
-    return FractionallySizedBox(
-      key: ValueKey(index),
-      alignment: alignment,
-      widthFactor: 0.5,
-      heightFactor: 0.5,
-      child: FittedBox(
-        child: AvatarWidget(
-          text: avatar.initials,
-          color: avatar.color,
-        ),
-      ),
-    );
-  }
-
-  static Alignment _getAlignment(int position) {
-    switch (position) {
-      case 0:
-        return Alignment.topLeft;
-      case 1:
-        return Alignment.topRight;
-      case 2:
-        return Alignment.bottomLeft;
-      default:
-        return Alignment.bottomRight;
-    }
-  }
-}
-
-class AvatarWidget extends StatelessWidget {
-  const AvatarWidget({
-    Key? key,
-    required this.text,
-    required this.color,
-  }) : super(key: key);
-
-  final String text;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return CircleAvatar(
-      radius: 40,
-      backgroundColor: color,
-      foregroundColor: Colors.white,
-      child: Text(
-        text,
-        style: TextStyle(fontSize: 30),
-      ),
-    );
+        ));
   }
 }
 
 class CommandBar extends StatelessWidget {
   final MainAxisAlignment mainAxisAlignment;
+  final CrossAxisAlignment crossAxisAlignment;
+  final bool expandFirstChild;
 
   const CommandBar({
     Key? key,
     this.mainAxisAlignment = MainAxisAlignment.start,
+    this.crossAxisAlignment = CrossAxisAlignment.start,
+    this.expandFirstChild = false,
   }) : super(key: key);
 
   @override
@@ -285,11 +160,14 @@ class CommandBar extends StatelessWidget {
 
     return OverflowView.flexible(
       spacing: 4,
-      expandFirstChild: true,
+      expandFirstChild: expandFirstChild,
       mainAxisAlignment: mainAxisAlignment,
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: crossAxisAlignment,
       children: [
-        SizedBox(height: 200, child: Text('Hello this is a long text for testing the ')),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Text('Menu title'),
+        ),
         ...commands.map((e) => _MenuItem(data: e))
       ],
       builder: (context, remaining) {
