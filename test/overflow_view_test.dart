@@ -5,7 +5,7 @@ import 'package:overflow_view/overflow_view.dart';
 
 void main() {
   testWidgets(
-    'the overflow indicator is not built if there is enough room (except for flexible)',
+    'the overflow indicator is not built if there is enough room',
     (tester) async {
       int buildCount = 0;
       await tester.pumpWidget(
@@ -38,7 +38,7 @@ void main() {
           ),
         ),
       );
-      expect(buildCount, 1);
+      expect(buildCount, 0);
     },
   );
 
