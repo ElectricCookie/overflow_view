@@ -38,7 +38,11 @@ class RenderOverflowView extends RenderBox
           mainAxisAlignment != MainAxisAlignment.spaceBetween &&
               mainAxisAlignment != MainAxisAlignment.spaceAround &&
               mainAxisAlignment != MainAxisAlignment.spaceEvenly,
-          "mainAxisAlignment must not be spaceBetween, spaceAround or spaceEvenly",
+          "mainAxisAlignment must not be spaceBetween, spaceAround or spaceEvenly (current not supported)",
+        ),
+        assert(
+          crossAxisAlignment != CrossAxisAlignment.baseline && crossAxisAlignment != CrossAxisAlignment.stretch,
+          "crossAxisAlignment must not be baseline or stretch (current not supported)",
         ),
         _direction = direction,
         _spacing = spacing,
