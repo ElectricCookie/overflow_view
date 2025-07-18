@@ -27,7 +27,7 @@ class OverflowView extends MultiChildRenderObjectWidget {
     CrossAxisAlignment crossAxisAlignment = CrossAxisAlignment.center,
     Axis direction = Axis.horizontal,
     required List<Widget> children,
-    bool expandFirstChild = false,
+    OverflowViewLayoutBehavior layoutBehavior = OverflowViewLayoutBehavior.fixed,
     double spacing = 0,
   }) : this._all(
           key: key,
@@ -37,8 +37,7 @@ class OverflowView extends MultiChildRenderObjectWidget {
           direction: direction,
           children: children,
           spacing: spacing,
-          expandFirstChild: expandFirstChild,
-          layoutBehavior: OverflowViewLayoutBehavior.fixed,
+          layoutBehavior: layoutBehavior,
         );
 
   /// Creates a flexible [OverflowView].
@@ -53,7 +52,6 @@ class OverflowView extends MultiChildRenderObjectWidget {
     MainAxisAlignment mainAxisAlignment = MainAxisAlignment.start,
     CrossAxisAlignment crossAxisAlignment = CrossAxisAlignment.center,
     required List<Widget> children,
-    bool expandFirstChild = false,
     double spacing = 0,
   }) : this._all(
           key: key,
@@ -62,7 +60,6 @@ class OverflowView extends MultiChildRenderObjectWidget {
           mainAxisAlignment: mainAxisAlignment,
           children: children,
           spacing: spacing,
-          expandFirstChild: expandFirstChild,
           crossAxisAlignment: crossAxisAlignment,
           layoutBehavior: OverflowViewLayoutBehavior.flexible,
         );
@@ -75,7 +72,6 @@ class OverflowView extends MultiChildRenderObjectWidget {
     this.direction = Axis.horizontal,
     required List<Widget> children,
     this.spacing = 0,
-    this.expandFirstChild = false,
     required OverflowViewLayoutBehavior layoutBehavior,
   })  : assert(spacing > double.negativeInfinity && spacing < double.infinity),
         _layoutBehavior = layoutBehavior,
@@ -113,9 +109,6 @@ class OverflowView extends MultiChildRenderObjectWidget {
   /// children are placed at the end of the cross axis.
   final CrossAxisAlignment crossAxisAlignment;
 
-  /// Whether the first child should be expanded to fill the available space.
-  final bool expandFirstChild;
-
   @override
   // ignore: library_private_types_in_public_api
   _OverflowViewElement createElement() {
@@ -125,7 +118,6 @@ class OverflowView extends MultiChildRenderObjectWidget {
   @override
   RenderOverflowView createRenderObject(BuildContext context) {
     return RenderOverflowView(
-      expandFirstChild: expandFirstChild,
       direction: direction,
       spacing: spacing,
       layoutBehavior: _layoutBehavior,
@@ -144,7 +136,6 @@ class OverflowView extends MultiChildRenderObjectWidget {
       ..spacing = spacing
       ..layoutBehavior = _layoutBehavior
       ..mainAxisAlignment = mainAxisAlignment
-      ..expandFirstChild = expandFirstChild
       ..crossAxisAlignment = crossAxisAlignment;
   }
 }

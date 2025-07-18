@@ -145,9 +145,10 @@ class MenuBar extends StatelessWidget {
       MenuItemData(id: 'f', label: 'Help'),
     ];
 
-    return OverflowView.flexible(
+    return OverflowView(
       spacing: spacing,
-      expandFirstChild: expandFirstChild,
+      layoutBehavior:
+          expandFirstChild ? OverflowViewLayoutBehavior.expandFirstFlexible : OverflowViewLayoutBehavior.flexible,
       mainAxisAlignment: mainAxisAlignment,
       crossAxisAlignment: crossAxisAlignment,
       children: [

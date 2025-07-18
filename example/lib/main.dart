@@ -1,4 +1,5 @@
 import 'package:example/avatars.dart';
+import 'package:example/fixed_flexible.dart';
 import 'package:example/menu.dart';
 import 'package:flutter/material.dart';
 
@@ -37,6 +38,10 @@ class MyApp extends StatelessWidget {
                   Text('Menu Bar', style: TextStyle(fontSize: 20)),
                   SizedBox(height: 20),
                   MenuDemo(),
+                  Divider(),
+                  Text('Fixed vs Flexible', style: TextStyle(fontSize: 20)),
+                  SizedBox(height: 20),
+                  FixedVsFlexibleDemo(),
                 ],
               ),
             ),
