@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:overflow_view/overflow_view.dart';
+import 'overflow_controls.dart';
 
 class FixedVsFlexibleDemo extends StatefulWidget {
   const FixedVsFlexibleDemo({super.key});
@@ -70,171 +71,50 @@ class _FixedVsFlexibleDemoState extends State<FixedVsFlexibleDemo> {
               ),
             ),
           ),
-          Wrap(
-            spacing: 16,
-            runSpacing: 8,
-            children: [
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text("Count: $_count"),
-                  SizedBox(
-                    width: 8,
-                  ),
-                  SizedBox(
-                    width: 150,
-                    child: Slider(
-                      value: _count.toDouble(),
-                      max: 20,
-                      min: 1,
-                      onChanged: (value) {
-                        setState(() {
-                          _count = value.toInt();
-                        });
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text("Width: ${_width.toInt()}"),
-                  SizedBox(
-                    width: 8,
-                  ),
-                  SizedBox(
-                    width: 150,
-                    child: Slider(
-                      value: _width,
-                      max: 500,
-                      min: 100,
-                      onChanged: (value) {
-                        setState(() {
-                          _width = value;
-                        });
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text("Spacing: ${_spacing.toInt()}"),
-                  SizedBox(
-                    width: 8,
-                  ),
-                  SizedBox(
-                    width: 150,
-                    child: Slider(
-                      value: _spacing,
-                      max: 50,
-                      min: -10,
-                      onChanged: (value) {
-                        setState(() {
-                          _spacing = value;
-                        });
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text("Fixed"),
-              Switch(
-                  value: _fixed,
-                  onChanged: (value) {
-                    setState(() {
-                      _fixed = value;
-                    });
-                  }),
-            ],
-          ),
-          Wrap(
-            spacing: 16,
-            runSpacing: 8,
-            children: [
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text("Axis:"),
-                  SizedBox(
-                    width: 8,
-                  ),
-                  DropdownButton<Axis>(
-                    value: _axis,
-                    onChanged: (value) {
-                      if (value != null) {
-                        setState(() {
-                          _axis = value;
-                        });
-                      }
-                    },
-                    items: Axis.values.map((axis) {
-                      return DropdownMenuItem<Axis>(
-                        value: axis,
-                        child: Text(axis == Axis.horizontal ? "Horizontal" : "Vertical"),
-                      );
-                    }).toList(),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text("MainAxisAlignment:"),
-                  SizedBox(
-                    width: 8,
-                  ),
-                  DropdownButton<MainAxisAlignment>(
-                    value: _mainAxisAlignment,
-                    onChanged: (value) {
-                      if (value != null) {
-                        setState(() {
-                          _mainAxisAlignment = value;
-                        });
-                      }
-                    },
-                    items: MainAxisAlignment.values.map((alignment) {
-                      return DropdownMenuItem<MainAxisAlignment>(
-                        value: alignment,
-                        child: Text(alignment.toString().split('.').last),
-                      );
-                    }).toList(),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text("CrossAxisAlignment:"),
-                  SizedBox(
-                    width: 8,
-                  ),
-                  DropdownButton<CrossAxisAlignment>(
-                    value: _crossAxisAlignment,
-                    onChanged: (value) {
-                      if (value != null) {
-                        setState(() {
-                          _crossAxisAlignment = value;
-                        });
-                      }
-                    },
-                    items: CrossAxisAlignment.values.map((alignment) {
-                      return DropdownMenuItem<CrossAxisAlignment>(
-                        value: alignment,
-                        child: Text(alignment.toString().split('.').last),
-                      );
-                    }).toList(),
-                  ),
-                ],
-              ),
-            ],
+          OverflowControls(
+            mainAxisAlignment: _mainAxisAlignment,
+            crossAxisAlignment: _crossAxisAlignment,
+            axis: _axis,
+            spacing: _spacing,
+            expandFirstChild: false,
+            fixed: _fixed,
+            count: _count,
+            width: _width,
+            onMainAxisAlignmentChanged: (value) {
+              setState(() {
+                _mainAxisAlignment = value;
+              });
+            },
+            onCrossAxisAlignmentChanged: (value) {
+              setState(() {
+                _crossAxisAlignment = value;
+              });
+            },
+            onAxisChanged: (value) {
+              setState(() {
+                _axis = value;
+              });
+            },
+            onSpacingChanged: (value) {
+              setState(() {
+                _spacing = value;
+              });
+            },
+            onFixedChanged: (value) {
+              setState(() {
+                _fixed = value;
+              });
+            },
+            onCountChanged: (value) {
+              setState(() {
+                _count = value;
+              });
+            },
+            onWidthChanged: (value) {
+              setState(() {
+                _width = value;
+              });
+            },
           ),
         ],
       ),

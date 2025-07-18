@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:overflow_view/overflow_view.dart';
+import 'overflow_controls.dart';
 
 class MenuDemo extends StatefulWidget {
   const MenuDemo({super.key});
@@ -36,81 +37,35 @@ class _MenuDemoState extends State<MenuDemo> {
           ),
         ),
         SizedBox(height: 20),
-        Wrap(
-          spacing: 10,
-          runSpacing: 10,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('MainAxisAlignment'),
-                SizedBox(height: 10),
-                SegmentedButton<MainAxisAlignment>(
-                  segments: [
-                    ButtonSegment(value: MainAxisAlignment.start, label: Text('Start')),
-                    ButtonSegment(value: MainAxisAlignment.center, label: Text('Center')),
-                    ButtonSegment(value: MainAxisAlignment.end, label: Text('End')),
-                  ],
-                  selected: {_mainAxisAlignment},
-                  onSelectionChanged: (value) {
-                    setState(() {
-                      _mainAxisAlignment = value.first;
-                    });
-                  },
-                ),
-              ],
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('CrossAxisAlignment'),
-                SizedBox(height: 10),
-                SegmentedButton<CrossAxisAlignment>(
-                  segments: [
-                    ButtonSegment(value: CrossAxisAlignment.start, label: Text('Start')),
-                    ButtonSegment(value: CrossAxisAlignment.center, label: Text('Center')),
-                    ButtonSegment(value: CrossAxisAlignment.end, label: Text('End')),
-                  ],
-                  selected: {_crossAxisAlignment},
-                  onSelectionChanged: (value) {
-                    setState(() {
-                      _crossAxisAlignment = value.first;
-                    });
-                  },
-                ),
-              ],
-            ),
-            Row(
-              children: [
-                Switch(
-                  value: _expandFirstChild,
-                  onChanged: (value) {
-                    setState(() {
-                      _expandFirstChild = value;
-                    });
-                  },
-                ),
-                Text('Expand first child'),
-              ],
-            ),
-            Column(children: [
-              Text('Spacing (${_spacing.toInt()})'),
-              SizedBox(height: 10),
-              SizedBox(
-                width: 200,
-                child: Slider(
-                  value: _spacing,
-                  min: -4,
-                  max: 16,
-                  onChanged: (value) {
-                    setState(() {
-                      _spacing = value;
-                    });
-                  },
-                ),
-              ),
-            ]),
-          ],
+        OverflowControls(
+          mainAxisAlignment: _mainAxisAlignment,
+          crossAxisAlignment: _crossAxisAlignment,
+          axis: Axis.horizontal,
+          spacing: _spacing,
+          expandFirstChild: _expandFirstChild,
+          fixed: false,
+          count: 0,
+          width: 0,
+          onMainAxisAlignmentChanged: (value) {
+            setState(() {
+              _mainAxisAlignment = value;
+            });
+          },
+          onCrossAxisAlignmentChanged: (value) {
+            setState(() {
+              _crossAxisAlignment = value;
+            });
+          },
+          onSpacingChanged: (value) {
+            setState(() {
+              _spacing = value;
+            });
+          },
+          onExpandFirstChildChanged: (value) {
+            setState(() {
+              _expandFirstChild = value;
+            });
+          },
         ),
       ],
     );
